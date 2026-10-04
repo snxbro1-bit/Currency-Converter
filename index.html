@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Free Currency Converter</title>
+
+<meta name="description" content="Free online currency converter. Convert between USD, EUR, GBP, LKR, INR, AUD, CAD and many other currencies easily.">
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:linear-gradient(135deg,#eef6ff,#dbeafe);
+    color:#172033;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    background:rgba(255,255,255,.95);
+    border-radius:25px;
+    padding:30px;
+    box-shadow:0 20px 60px rgba(15,70,130,.15);
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.header h1{
+    font-size:32px;
+    color:#0759b5;
+    margin-bottom:8px;
+}
+
+.header p{
+    color:#667085;
+    font-size:15px;
+}
+
+.converter-card{
+    background:#f8fbff;
+    border:1px solid #dbeafe;
+    border-radius:20px;
+    padding:25px;
+}
+
+.field{
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+input,
+select{
+    width:100%;
+    padding:15px;
+    border:1px solid #cbd5e1;
+    border-radius:12px;
+    background:white;
+    font-size:16px;
+    outline:none;
+    transition:.2s;
+}
+
+input:focus,
+select:focus{
+    border-color:#1683ff;
+    box-shadow:0 0 0 4px rgba(22,131,255,.12);
+}
+
+.currency-row{
+    display:grid;
+    grid-template-columns:1fr 65px 1fr;
+    gap:12px;
+    align-items:end;
+}
+
+.swap-button{
+    width:65px;
+    height:52px;
+    border:0;
+    border-radius:12px;
+    background:#e7f2ff;
+    color:#0759b5;
+    font-size:22px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.swap-button:hover{
+    background:#d5eaff;
+    transform:rotate(180deg);
+}
+
+.convert-button{
+    width:100%;
+    border:0;
+    border-radius:13px;
+    padding:15px;
+    background:linear-gradient(135deg,#0878e8,#0759b5);
+    color:white;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.convert-button:hover{
+    transform:translateY(-1px);
+    box-shadow:0 10px 25px rgba(7,89,181,.25);
+}
+
+.result{
+    margin-top:22px;
+    background:linear-gradient(135deg,#eaf5ff,#f7fbff);
+    border:1px solid #b9dcff;
+    border-radius:17px;
+    padding:25px;
+    text-align:center;
+}
+
+.result-label{
+    color:#667085;
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+.result-value{
+    color:#0759b5;
+    font-size:34px;
+    font-weight:800;
+    word-break:break-word;
+}
+
+.rate-info{
+    margin-top:12px;
+    color:#667085;
+    font-size:13px;
+}
+
+.quick-currencies{
+    margin-top:25px;
+}
+
+.quick-currencies h2{
+    color:#0759b5;
+    font-size:18px;
+    margin-bottom:15px;
+}
+
+.quick-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+.quick-button{
+    border:1px solid #dbeafe;
+    background:white;
+    padding:11px 8px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    color:#344054;
+    transition:.2s;
+}
+
+.quick-button:hover{
+    border-color:#1683ff;
+    color:#0759b5;
+    background:#f0f7ff;
+}
+
+.info{
+    margin-top:25px;
+    background:#f1f7ff;
+    border-left:4px solid #1683ff;
+    padding:16px;
+    border-radius:10px;
+    color:#475467;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.footer{
+    text-align:center;
+    margin-top:25px;
+    color:#98a2b3;
+    font-size:12px;
+}
+
+@media(max-width:700px){
+
+    body{
+        padding:10px;
+    }
+
+    .container{
+        padding:20px 15px;
+        border-radius:18px;
+    }
+
+    .header h1{
+        font-size:26px;
+    }
+
+    .currency-row{
+        grid-template-columns:1fr;
+    }
+
+    .swap-button{
+        width:100%;
+        height:45px;
+    }
+
+    .quick-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .result-value{
+        font-size:27px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>💱 Free Currency Converter</h1>
+        <p>Convert currencies quickly with a simple and professional online calculator.</p>
+    </div>
+
+    <div class="converter-card">
+
+        <div class="field">
+
+            <label>Amount</label>
+
+            <input
+                type="number"
+                id="amount"
+                value="100"
+                min="0"
+                step="any"
+                placeholder="Enter amount">
+
+        </div>
+
+
+        <div class="currency-row">
+
+            <div class="field">
+
+                <label>From</label>
+
+                <select id="fromCurrency">
+
+                    <option value="USD">🇺🇸 USD — US Dollar</option>
+                    <option value="EUR">🇪🇺 EUR — Euro</option>
+                    <option value="GBP">🇬🇧 GBP — British Pound</option>
+                    <option value="LKR" selected>🇱🇰 LKR — Sri Lankan Rupee</option>
+                    <option value="INR">🇮🇳 INR — Indian Rupee</option>
+                    <option value="AUD">🇦🇺 AUD — Australian Dollar</option>
+                    <option value="CAD">🇨🇦 CAD — Canadian Dollar</option>
+                    <option value="AED">🇦🇪 AED — UAE Dirham</option>
+                    <option value="SAR">🇸🇦 SAR — Saudi Riyal</option>
+                    <option value="QAR">🇶🇦 QAR — Qatari Riyal</option>
+                    <option value="JPY">🇯🇵 JPY — Japanese Yen</option>
+                    <option value="CNY">🇨🇳 CNY — Chinese Yuan</option>
+                    <option value="SGD">🇸🇬 SGD — Singapore Dollar</option>
+                    <option value="MYR">🇲🇾 MYR — Malaysian Ringgit</option>
+                    <option value="NZD">🇳🇿 NZD — New Zealand Dollar</option>
+                    <option value="CHF">🇨🇭 CHF — Swiss Franc</option>
+                    <option value="HKD">🇭🇰 HKD — Hong Kong Dollar</option>
+                    <option value="ZAR">🇿🇦 ZAR — South African Rand</option>
+                    <option value="KRW">🇰🇷 KRW — South Korean Won</option>
+                    <option value="THB">🇹🇭 THB — Thai Baht</option>
+                    <option value="PHP">🇵🇭 PHP — Philippine Peso</option>
+                    <option value="IDR">🇮🇩 IDR — Indonesian Rupiah</option>
+                    <option value="BDT">🇧🇩 BDT — Bangladeshi Taka</option>
+                    <option value="PKR">🇵🇰 PKR — Pakistani Rupee</option>
+                    <option value="NPR">🇳🇵 NPR — Nepalese Rupee</option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="swap-button"
+                onclick="swapCurrencies()"
+                title="Swap currencies">
+                ⇄
+            </button>
+
+
+            <div class="field">
+
+                <label>To</label>
+
+                <select id="toCurrency">
+
+                    <option value="USD" selected>🇺🇸 USD — US Dollar</option>
+                    <option value="EUR">🇪🇺 EUR — Euro</option>
+                    <option value="GBP">🇬🇧 GBP — British Pound</option>
+                    <option value="LKR">🇱🇰 LKR — Sri Lankan Rupee</option>
+                    <option value="INR">🇮🇳 INR — Indian Rupee</option>
+                    <option value="AUD">🇦🇺 AUD — Australian Dollar</option>
+                    <option value="CAD">🇨🇦 CAD — Canadian Dollar</option>
+                    <option value="AED">🇦🇪 AED — UAE Dirham</option>
+                    <option value="SAR">🇸🇦 SAR — Saudi Riyal</option>
+                    <option value="QAR">🇶🇦 QAR — Qatari Riyal</option>
+                    <option value="JPY">🇯🇵 JPY — Japanese Yen</option>
+                    <option value="CNY">🇨🇳 CNY — Chinese Yuan</option>
+                    <option value="SGD">🇸🇬 SGD — Singapore Dollar</option>
+                    <option value="MYR">🇲🇾 MYR — Malaysian Ringgit</option>
+                    <option value="NZD">🇳🇿 NZD — New Zealand Dollar</option>
+                    <option value="CHF">🇨🇭 CHF — Swiss Franc</option>
+                    <option value="HKD">🇭🇰 HKD — Hong Kong Dollar</option>
+                    <option value="ZAR">🇿🇦 ZAR — South African Rand</option>
+                    <option value="KRW">🇰🇷 KRW — South Korean Won</option>
+                    <option value="THB">🇹🇭 THB — Thai Baht</option>
+                    <option value="PHP">🇵🇭 PHP — Philippine Peso</option>
+                    <option value="IDR">🇮🇩 IDR — Indonesian Rupiah</option>
+                    <option value="BDT">🇧🇩 BDT — Bangladeshi Taka</option>
+                    <option value="PKR">🇵🇰 PKR — Pakistani Rupee</option>
+                    <option value="NPR">🇳🇵 NPR — Nepalese Rupee</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="convert-button"
+            onclick="convertCurrency()">
+            Convert Currency
+        </button>
+
+
+        <div class="result">
+
+            <div class="result-label">
+                Converted Amount
+            </div>
+
+            <div
+                class="result-value"
+                id="result">
+                $0.00
+            </div>
+
+            <div
+                class="rate-info"
+                id="rateInfo">
+                Enter an amount and click Convert.
+            </div>
+
+        </div>
+
+
+        <div class="quick-currencies">
+
+            <h2>Popular Currencies</h2>
+
+            <div class="quick-grid">
+
+                <button class="quick-button" onclick="quickCurrency('USD')">🇺🇸 USD</button>
+                <button class="quick-button" onclick="quickCurrency('EUR')">🇪🇺 EUR</button>
+                <button class="quick-button" onclick="quickCurrency('GBP')">🇬🇧 GBP</button>
+                <button class="quick-button" onclick="quickCurrency('LKR')">🇱🇰 LKR</button>
+                <button class="quick-button" onclick="quickCurrency('INR')">🇮🇳 INR</button>
+                <button class="quick-button" onclick="quickCurrency('AED')">🇦🇪 AED</button>
+                <button class="quick-button" onclick="quickCurrency('AUD')">🇦🇺 AUD</button>
+                <button class="quick-button" onclick="quickCurrency('JPY')">🇯🇵 JPY</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="info">
+
+        <strong>Important:</strong>
+        This version uses preset exchange rates for demonstration and
+        educational calculations. Exchange rates change frequently, so
+        results may not represent current market rates.
+
+    </div>
+
+
+    <div class="footer">
+        Free Tools Zone • Free Online Currency Converter
+    </div>
+
+</div>
+
+
+<script>
+
+/*
+   Approximate rates relative to USD.
+
+   These are demo/preset rates.
+   For a live currency converter, connect a live exchange-rate API.
+*/
+
+const rates = {
+
+    USD: 1,
+
+    EUR: 0.92,
+
+    GBP: 0.79,
+
+    LKR: 302.00,
+
+    INR: 88.00,
+
+    AUD: 1.52,
+
+    CAD: 1.38,
+
+    AED: 3.6725,
+
+    SAR: 3.75,
+
+    QAR: 3.64,
+
+    JPY: 149.00,
+
+    CNY: 7.20,
+
+    SGD: 1.29,
+
+    MYR: 4.25,
+
+    NZD: 1.67,
+
+    CHF: 0.88,
+
+    HKD: 7.80,
+
+    ZAR: 18.00,
+
+    KRW: 1380,
+
+    THB: 34.00,
+
+    PHP: 57.00,
+
+    IDR: 16800,
+
+    BDT: 122.00,
+
+    PKR: 282.00,
+
+    NPR: 141.00
+
+};
+
+
+const currencyLocales = {
+
+    USD:"en-US",
+    EUR:"de-DE",
+    GBP:"en-GB",
+    LKR:"en-LK",
+    INR:"en-IN",
+    AUD:"en-AU",
+    CAD:"en-CA",
+    AED:"ar-AE",
+    SAR:"ar-SA",
+    QAR:"ar-QA",
+    JPY:"ja-JP",
+    CNY:"zh-CN",
+    SGD:"en-SG",
+    MYR:"ms-MY",
+    NZD:"en-NZ",
+    CHF:"de-CH",
+    HKD:"zh-HK",
+    ZAR:"en-ZA",
+    KRW:"ko-KR",
+    THB:"th-TH",
+    PHP:"en-PH",
+    IDR:"id-ID",
+    BDT:"bn-BD",
+    PKR:"en-PK",
+    NPR:"ne-NP"
+
+};
+
+
+function formatCurrency(amount,currency){
+
+    const locale =
+        currencyLocales[currency] || "en-US";
+
+    try{
+
+        return new Intl.NumberFormat(locale,{
+
+            style:"currency",
+
+            currency:currency,
+
+            maximumFractionDigits:
+                ["JPY","KRW","IDR"].includes(currency)
+                ? 0
+                : 2
+
+        }).format(amount);
+
+    }catch(error){
+
+        return currency + " " +
+            amount.toLocaleString();
+
+    }
+
+}
+
+
+function convertCurrency(){
+
+    const amount =
+        parseFloat(
+            document.getElementById("amount").value
+        );
+
+    const from =
+        document.getElementById("fromCurrency").value;
+
+    const to =
+        document.getElementById("toCurrency").value;
+
+
+    if(
+        isNaN(amount) ||
+        amount < 0
+    ){
+
+        alert("Please enter a valid amount.");
+        return;
+
+    }
+
+
+    /*
+       Convert FROM currency to USD first,
+       then USD to TO currency.
+    */
+
+    const amountInUSD =
+        amount / rates[from];
+
+    const convertedAmount =
+        amountInUSD * rates[to];
+
+
+    document.getElementById("result")
+        .textContent =
+        formatCurrency(
+            convertedAmount,
+            to
+        );
+
+
+    const rate =
+        rates[to] / rates[from];
+
+
+    document.getElementById("rateInfo")
+        .textContent =
+        "1 " + from +
+        " ≈ " +
+        rate.toLocaleString(
+            undefined,
+            {
+                maximumFractionDigits:6
+            }
+        ) +
+        " " + to;
+
+}
+
+
+function swapCurrencies(){
+
+    const from =
+        document.getElementById("fromCurrency");
+
+    const to =
+        document.getElementById("toCurrency");
+
+    const temp =
+        from.value;
+
+    from.value =
+        to.value;
+
+    to.value =
+        temp;
+
+
+    convertCurrency();
+
+}
+
+
+function quickCurrency(currency){
+
+    document.getElementById("toCurrency")
+        .value =
+        currency;
+
+    convertCurrency();
+
+}
+
+
+document.getElementById("amount")
+    .addEventListener(
+        "input",
+        convertCurrency
+    );
+
+
+document.getElementById("fromCurrency")
+    .addEventListener(
+        "change",
+        convertCurrency
+    );
+
+
+document.getElementById("toCurrency")
+    .addEventListener(
+        "change",
+        convertCurrency
+    );
+
+
+convertCurrency();
+
+</script>
+
+</body>
+</html>
